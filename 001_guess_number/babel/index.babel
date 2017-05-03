@@ -1,0 +1,60 @@
+function Billboard(props){
+    if (props.guess == false){
+    return <h1>My guess is {props.num}</h1>;
+    }
+    else{
+      return <h1>My guess is Correct!</h1>;
+    }
+}
+class Guess extends React.Component{
+   constructor(props) {
+    super(props);
+    this.state = {mid: 50, reset: false};
+    this.start = 0;
+    this.end = 100;
+    this.high = this.high.bind(this);
+    this.low = this.low.bind(this);
+    this.reset = this.reset.bind(this);
+  }
+  high(){
+    this.end = this.state.mid;
+    var newmid = Math.floor((this.start + this.end) / 2);
+    console.log(newmid);
+    this.setState({mid: newmid, hit: 0});
+    }
+  
+  low(){
+    this.start = this.state.mid;
+    var newmid = Math.floor((this.start + this.end) / 2);
+    this.setState({mid: newmid});
+    }
+  reset(){
+    this.start = 0;
+    this.end = 100;
+    if (this.state.reset == false){
+      this.setState({reset: true})
+    }
+    else{
+      this.setState({mid: 50, reset: false});
+    }
+
+  }
+render() {
+    return (
+      <div>
+        <Billboard guess = {this.state.reset} num = {this.state.mid}/>
+        <button onClick = {this.high}>too high
+        </button>
+        <button onClick = {this.low}>too low
+        </button>
+        <button onClick = {this.reset}>{this.state.reset? "Reset":"Yes!"}
+        </button>
+       </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Guess/>,
+  document.getElementById('root')
+);
