@@ -1,0 +1,119 @@
+let Button = mui.react.Button,
+    Panel = mui.react.Panel,
+    Appbar = mui.react.Appbar,
+    Divider = mui.react.Divider,
+    Table = mui.react.Table,
+    Form = mui.react.Form,
+    Input = mui.react.Input,
+    Row = mui.react.Row,
+    Col = mui.react.Col,
+    Checkbox = mui.react.Checkbox,
+    Container = mui.react.Container;
+
+class Items extends React.Component{
+  render(){
+    var name = this.props.product.stocked ?
+      this.props.product.name :
+      <span style={{color: 'red'}}>
+        {this.props.product.name}
+      </span>;
+    return (
+      <tr>
+        <td>{name}</td>
+        <td>{this.props.product.price}</td>
+      </tr>);
+  }
+}
+class TitleBar extends React.Component{
+  render(){
+    return(
+       <tr><th colSpan="2">{this.props.category}</th></tr>
+    );
+  }
+}
+
+class StockBoard extends React.Component{
+  render(){
+        var rows = [];
+    var lastCategory = null;
+    this.props.products.forEach(function(product) {
+      if (product.category !== lastCategory) {
+        rows.push(<TitleBar category={product.category} key={product.category} />);
+      }
+      rows.push(<Items product={product} key={product.name} />);
+      lastCategory = product.category;
+    });
+    return(
+      <table class="mui-table--bordered">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>{rows}</tbody>
+      </table>
+    );
+    
+  }
+}
+
+class SearchBar extends React.Component{
+  render(){
+    return(
+      <Form inline={true}>
+      <Input hint="Search here" /><Button color = "accent" variant = "raised">Search</Button>
+        <Checkbox name="inputA1" label="Only show product in stock" defaultChecked={false} />
+       </Form>);
+    
+  }
+}
+class ProductList extends React.Component{
+  render(){
+    return(
+         <Panel>
+            <SearchBar/>
+            <Divider/>
+            <Container>
+                <StockBoard products={PRODUCTS} />
+            </Container>
+          </Panel>
+        );
+  }
+}
+
+class AppBar extends React.Component {
+  render() {
+    let s1 = {verticalAlign: 'middle'};
+    return (<Appbar className="mui--appbar-height" style = {s1}>
+          <div className="mui--text-headline">Product List</div>
+          </Appbar>);
+  }
+}
+
+function App(){
+  return(
+    <Container >
+        <Row>
+          <Col md="4"></Col>
+          <Col md="4">
+          <ProductList/>
+          </Col>
+          <Col md="4"></Col>
+        </Row>
+        </Container>
+            );
+}
+
+var PRODUCTS = [
+  {category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
+  {category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'},
+  {category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball'},
+  {category: 'Electronics', price: '$99.99', stocked: true, name: 'iPod Touch'},
+  {category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
+  {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
+];
+
+ReactDOM.render(<AppBar/>, document.getElementById('bar'));
+
+ReactDOM.render(<App />, document.getElementById('root'));
